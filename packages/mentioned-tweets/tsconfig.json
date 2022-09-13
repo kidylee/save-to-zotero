@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
     "types": [
       "@cloudflare/workers-types",
       "@types/jest",
@@ -9,7 +8,9 @@
     ]
   },
   "include": [
-    "./src"
+    "./src",
+    "bindings.d.ts",
+    "globals.d.ts"
   ],
   "exclude": [
     "node_modules",

@@ -5,15 +5,15 @@ import {
   getMentioned,
   getMentionedURL,
 } from "../src/twitter_api";
-import "../src/globals";
-import { Env } from "../src";
+import "../bindings";
+import "../globals";
 import {MentionedResponse} from "../../types";
 
-declare function getMiniflareBindings(): Env;
+declare function getMiniflareBindings(): Bindings;
 
 describe("twitter_api", () => {
   test("API", async () => {
-    globalThis.env = getMiniflareBindings();
+    globalThis.bindings = getMiniflareBindings();
     const rest = await api<MentionedResponse>(
       "https://api.twitter.com/2/users/296579936/mentions"
     );
@@ -21,20 +21,20 @@ describe("twitter_api", () => {
   });
 
   test("getMentioned", async () => {
-    globalThis.env = getMiniflareBindings();
+    globalThis.bindings = getMiniflareBindings();
     const rest = await getMentioned();
     expect(rest).toBeDefined();
   });
 
   test("getMentioned since id", async () => {
-    globalThis.env = getMiniflareBindings();
+    globalThis.bindings = getMiniflareBindings();
     const rest = await getMentioned();
     const rest2 = await getMentioned(rest.data[0].id);
     expect(rest2.meta.result_count).toBe(0);
   });
 
   test("getLastPage", async () => {
-    globalThis.env = getMiniflareBindings();
+    globalThis.bindings = getMiniflareBindings();
     process.env.MAX_RESULTS = "100";
 
     const rest = await getLastPage();

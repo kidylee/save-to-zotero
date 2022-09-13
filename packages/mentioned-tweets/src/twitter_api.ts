@@ -1,9 +1,9 @@
-import {MentionedResponse} from "../../types";
+import {MentionedResponse} from "@save-to-zotero/types";
 
 export async function api<T>(url: string): Promise<T> {
     const response = await fetch(url, {
         headers: {
-            Authorization: `Bearer ${globalThis.env.TWITTER_BEARER}`,
+            Authorization: `Bearer ${bindings.TWITTER_BEARER}`,
         },
     });
     if (!response.ok) {
@@ -48,7 +48,7 @@ export function getMentionedURL(
     pagination_token?: string
 ): string {
     const url = new URL(
-        `https://api.twitter.com/2/users/${env.TWITTER_ACCOUNT}/mentions`
+        `https://api.twitter.com/2/users/${bindings.TWITTER_ACCOUNT}/mentions`
     );
     url.searchParams.append("max_results", process.env.MAX_RESULTS ?? "20");
     url.searchParams.append("tweet.fields", "conversation_id");
