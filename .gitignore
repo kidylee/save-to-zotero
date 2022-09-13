@@ -1,4 +1,4 @@
 **/node_modules/
 .idea
-/packages/mentioned-tweets/.dev.vars
-/packages/mentioned-tweets/.env
+**/.dev.vars
+**/.env
