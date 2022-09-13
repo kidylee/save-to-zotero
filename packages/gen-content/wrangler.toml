@@ -1,0 +1,6 @@
+name = "gen-content" # todo
+workers_dev = true
+compatibility_date = "2022-05-03"
+kv_namespaces = [
+    { binding = "TWITTER_KV", id = "9754c1be9a124caa8cff75426111c471", preview_id = "2c9be7447201431aa777161e3bd004cf" }
+]

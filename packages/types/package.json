@@ -1,0 +1,13 @@
+{
+  "name": "@save-to-zotero/types",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "An Li <kidylee@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "scripts": {},
+  "devDependencies": {
+
+  }
+}
