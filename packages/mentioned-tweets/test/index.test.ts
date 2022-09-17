@@ -1,8 +1,9 @@
-import {LAST_TWEET_ID} from "../src/constants";
-import {pullMentions} from "../src";
-import {getMentioned} from "../src/twitter_api";
+import { LAST_TWEET_ID } from "../src/constants";
+import { pullMentions } from "../src";
+import { getMentioned } from "@save-to-zotero/twitter-api";
 import "../bindings";
 import "../globals";
+
 declare function getMiniflareBindings(): Bindings;
 
 describe("scheduled", () => {
@@ -10,7 +11,7 @@ describe("scheduled", () => {
     process.env.MAX_RESULTS = "100";
 
     const env = getMiniflareBindings();
-    globalThis.bindings = env
+    globalThis.bindings = env;
     const lastId = await env.TWITTER_KV.get(LAST_TWEET_ID);
     const resp = await pullMentions();
     expect(await env.TWITTER_KV.get("LAST_TWEET_ID")).toBe(resp?.data[0].id);

@@ -1,16 +1,16 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "declaration": true
+    "declaration": true,
   },
   "include": [
-    "./src"
+    "./src",
+    "globals.d.ts",
+    "bindings.d.ts"
   ],
   "exclude": [
     "node_modules",
     "build",
-    "dist",
-    "example",
-    "rollup.config.js"
+    "dist"
   ]
 }

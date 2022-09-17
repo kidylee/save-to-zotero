@@ -1,18 +1,26 @@
 name = "mentioned-tweets"
 workers_dev = true
 compatibility_date = "2022-05-03"
-kv_namespaces = [
-    { binding = "TWITTER_KV", id = "9754c1be9a124caa8cff75426111c471", preview_id = "2c9be7447201431aa777161e3bd004cf" }
-]
-services = [
-    { binding = "GEN_CONTENT", service = "gen-content", environment = "production"}]
+
+
+[[kv_namespaces]]
+binding = "TWITTER_KV"
+id = "9754c1be9a124caa8cff75426111c471"
+preview_id = "2c9be7447201431aa777161e3bd004cf"
+
+
+[[kv_namespaces]]
+binding = "ZOTERO_API_KV"
+id = "8cbdcd27ad274c14a83aef666e7e57a0"
+preview_id = "778f5b33c8ac48fe8a5f5f2e4eb78e63"
+
+[[services]]
+binding = "GEN_CONTENT"
+service = "gen-content"
+environment = "production"
 
 [triggers]
 crons = ["0 * * * *"]
-
-
-[miniflare]
-env_path=".dev.vars"
 
 
 # Paths resolved relative to wrangler.toml's directory
