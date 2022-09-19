@@ -9,12 +9,15 @@
 		"start-stackblitz": "WRANGLER_SEND_METRICS=false wrangler dev src/index.ts --local"
 	},
 	"dependencies": {
-		"@save-to-zotero/twitter-api": "*"
+		"@save-to-zotero/twitter-api": "*",
+		"cloudworker-router": "git+https://kidylee@github.com/kidylee/cloudworker-router.git",
+		"node-jose": "^2.1.1"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^3.0.0",
 		"@types/jest": "^28.1.6",
 		"@types/node": "^18.7.16",
+		"@types/node-jose": "^1.1.10",
 		"@typescript-eslint/eslint-plugin": "^5.33.0",
 		"@typescript-eslint/parser": "^5.33.0",
 		"eslint": "8.22.0",

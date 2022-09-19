@@ -1,17 +1,6 @@
 {
+	"extends": "../../tsconfig.json",
 	"compilerOptions": {
-		"noEmit": true,
-		"module": "esnext",
-		"target": "es2020",
-		"lib": [
-			"es2020"
-		],
-		"strict": true,
-		"esModuleInterop": true,
-		"alwaysStrict": true,
-		"preserveConstEnums": true,
-		"moduleResolution": "node",
-		"sourceMap": true,
 		"types": [
 			"@cloudflare/workers-types",
 			"@types/jest",
@@ -19,7 +8,9 @@
 		]
 	},
 	"include": [
-		"./src"
+		"./src",
+		"bindings.d.ts",
+		"globals.d.ts"
 	],
 	"exclude": [
 		"node_modules",
