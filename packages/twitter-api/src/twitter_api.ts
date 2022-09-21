@@ -2,45 +2,122 @@ import {
   ConversationDistributionTask,
   TwitterResponse,
 } from "@save-to-zotero/twitter-api";
+import { enc, HmacSHA1 } from "crypto-js";
+import OAuth from "oauth-1.0a";
 
-export async function api<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${bindings.TWITTER_BEARER}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
-  return await response.json();
+export function encodeURIfix(str: string) {
+  return encodeURIComponent(str).replace(/!/g, "%21");
 }
 
-export const getLastPageOfMentionedTweets = async (
-  sinceId?: string | null,
-  response?: TwitterResponse
-): Promise<TwitterResponse | undefined> => {
-  if (!response) {
-    const page = await getMentioned();
-    return await getLastPageOfMentionedTweets(sinceId, page);
-  }
-  if (!response.meta.next_token) {
-    return response;
+interface TwitterApiInit {
+  consumerKey: string;
+  consumerSecret: string;
+  accessToken: string;
+  accessTokenSecret: string;
+  botId: string;
+}
+
+export class TwitterApi {
+  parameters: TwitterApiInit;
+
+  constructor(init: TwitterApiInit) {
+    this.parameters = init;
   }
 
-  if (response.meta.next_token) {
-    return await getLastPageOfMentionedTweets(
-      sinceId,
-      await getMentioned(sinceId, response.meta.next_token)
+  replayTweet = async (tweetId: string, tweetContent: string): Promise<any> => {
+    const oauth = new OAuth({
+      consumer: {
+        key: this.parameters.consumerKey,
+        secret: this.parameters.consumerSecret,
+      },
+      signature_method: "HMAC-SHA1",
+      hash_function: hashSha1,
+    });
+
+    function hashSha1(baseString: any, key: any) {
+      return HmacSHA1(baseString, key).toString(enc.Base64);
+    }
+
+    const reqAuth = {
+      url: "https://api.twitter.com/2/tweets",
+      method: "POST",
+    };
+
+    const token = {
+      key: this.parameters.accessToken,
+      secret: this.parameters.accessTokenSecret,
+    };
+
+    const reqBody = JSON.stringify({
+      text: tweetContent,
+      reply: { in_reply_to_tweet_id: tweetId },
+    });
+
+    return await fetch(reqAuth.url, {
+      method: reqAuth.method,
+      headers: {
+        ...oauth.toHeader(oauth.authorize(reqAuth, token)),
+        "Content-Type": "application/json",
+      },
+      body: reqBody,
+    });
+  };
+
+  api = async <T>(url: string): Promise<T> => {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${process.env.TWITTER_BEARER}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return await response.json();
+  };
+
+  getMentioned = async (
+    sinceId?: string | null,
+    pagination_token?: string
+  ): Promise<TwitterResponse> => {
+    return await this.api<TwitterResponse>(
+      getMentionedURL(sinceId, pagination_token)
     );
-  }
-  return response;
-};
+  };
 
-export async function getMentioned(
-  sinceId?: string | null,
-  pagination_token?: string
-): Promise<TwitterResponse> {
-  return await api<TwitterResponse>(getMentionedURL(sinceId, pagination_token));
+  getLastPageOfMentionedTweets = async (
+    sinceId?: string | null,
+    response?: TwitterResponse
+  ): Promise<TwitterResponse | undefined> => {
+    if (!response) {
+      const page = await this.getMentioned();
+      return await this.getLastPageOfMentionedTweets(sinceId, page);
+    }
+    if (!response.meta.next_token) {
+      return response;
+    }
+
+    if (response.meta.next_token) {
+      return await this.getLastPageOfMentionedTweets(
+        sinceId,
+        await this.getMentioned(sinceId, response.meta.next_token)
+      );
+    }
+    return response;
+  };
+
+  searchConversation = async (
+    conversationId: string
+  ): Promise<TwitterResponse> => {
+    const url = new URL(
+      `https://api.twitter.com/2/tweets/search/recent?query=conversation_id:${conversationId}`
+    );
+    url.searchParams.append("tweet.fields", "in_reply_to_user_id");
+    url.searchParams.append(
+      "expansions",
+      "referenced_tweets.id,in_reply_to_user_id"
+    );
+    return await this.api<TwitterResponse>(url.toString());
+  };
 }
 
 export function getMentionedURL(
@@ -84,18 +161,4 @@ export const getConversationTasks = (
     map.get(tweet.conversation_id)?.mentionedTweets.push(tweet);
   });
   return Array.from(map.values());
-};
-
-export const searchConversation = async (
-  conversationId: string
-): Promise<TwitterResponse> => {
-  const url = new URL(
-    `https://api.twitter.com/2/tweets/search/recent?query=conversation_id:${conversationId}`
-  );
-  url.searchParams.append("tweet.fields", "in_reply_to_user_id");
-  url.searchParams.append(
-    "expansions",
-    "referenced_tweets.id,in_reply_to_user_id"
-  );
-  return await api<TwitterResponse>(url.toString());
 };

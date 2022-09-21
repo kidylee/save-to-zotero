@@ -1,5 +1,6 @@
 {
 	"preset": "ts-jest/presets/default-esm",
+	"setupFiles": ["dotenv/config"],
 	"globals": {
 		"ts-jest": {
 			"tsconfig": "./tsconfig.json",

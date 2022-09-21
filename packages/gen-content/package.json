@@ -10,8 +10,8 @@
 	},
 	"dependencies": {
 		"@save-to-zotero/twitter-api": "*",
-		"cloudworker-router": "git+https://kidylee@github.com/kidylee/cloudworker-router.git",
-		"node-jose": "^2.1.1"
+		"@types/crypto-js": "^4.1.1",
+		"cloudworker-router": "git+https://kidylee@github.com/kidylee/cloudworker-router.git"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^3.0.0",

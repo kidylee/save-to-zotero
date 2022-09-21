@@ -2,3 +2,4 @@
 .idea
 **/.dev.vars
 **/.env
+**/.DS_Store

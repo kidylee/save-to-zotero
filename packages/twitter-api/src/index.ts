@@ -1,6 +1,10 @@
 import { Tweet, TwitterResponse } from "./twitter";
 import { ConversationDistributionTask } from "./type";
-import { getLastPageOfMentionedTweets, getMentioned } from "./twitter_api";
+import {
+  getLastPageOfMentionedTweets,
+  getMentioned,
+  replayTweet,
+} from "./twitter_api";
 
 export {
   Tweet,
@@ -8,4 +12,5 @@ export {
   ConversationDistributionTask,
   getLastPageOfMentionedTweets,
   getMentioned,
+  replayTweet,
 };

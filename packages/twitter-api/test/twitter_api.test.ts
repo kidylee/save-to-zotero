@@ -1,10 +1,8 @@
 import {
-  api,
+  encodeURIfix,
   getConversationTasks,
-  getLastPageOfMentionedTweets,
-  getMentioned,
   getMentionedURL,
-  searchConversation,
+  TwitterApi,
 } from "../src/twitter_api";
 import "../bindings";
 import "../globals";
@@ -12,10 +10,29 @@ import { TwitterResponse } from "../../twitter-api";
 
 declare function getMiniflareBindings(): Bindings;
 
+const tApi = new TwitterApi({
+  consumerKey: process.env.CONSUMER_KEY!,
+  consumerSecret: process.env.CONSUMER_SECRET!,
+  accessToken: process.env.ACCESS_TOKEN_KEY!,
+  accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
+  botId: process.env.TWITTER_ACCOUNT!,
+});
+
 describe("twitter_api", () => {
+  beforeAll(() => {
+    globalThis.bindings = getMiniflareBindings();
+  });
+  test("replay tweet", async () => {
+    const resp = await tApi.replayTweet(
+      "1569986020397182976",
+      "test 123451231"
+    );
+    console.log(await resp.json());
+  });
+
   test("API", async () => {
     globalThis.bindings = getMiniflareBindings();
-    const rest = await api<TwitterResponse>(
+    const rest = await tApi.api<TwitterResponse>(
       "https://api.twitter.com/2/users/296579936/mentions"
     );
     expect(rest).toBeDefined();
@@ -23,14 +40,14 @@ describe("twitter_api", () => {
 
   test("getMentioned", async () => {
     globalThis.bindings = getMiniflareBindings();
-    const rest = await getMentioned();
+    const rest = await tApi.getMentioned();
     expect(rest).toBeDefined();
   });
 
   test("getMentioned since id", async () => {
     globalThis.bindings = getMiniflareBindings();
-    const rest = await getMentioned();
-    const rest2 = await getMentioned(rest.data[0].id);
+    const rest = await tApi.getMentioned();
+    const rest2 = await tApi.getMentioned(rest.data[0].id);
     expect(rest2.meta.result_count).toBe(0);
   });
 
@@ -38,11 +55,11 @@ describe("twitter_api", () => {
     globalThis.bindings = getMiniflareBindings();
     process.env.MAX_RESULTS = "100";
 
-    const rest = await getLastPageOfMentionedTweets();
+    const rest = await tApi.getLastPageOfMentionedTweets();
     expect(rest?.meta.next_token).not.toBeDefined();
 
-    const rest2 = await getMentioned();
-    const rest3 = await getLastPageOfMentionedTweets(rest2.data[0].id);
+    const rest2 = await tApi.getMentioned();
+    const rest3 = await tApi.getLastPageOfMentionedTweets(rest2.data[0].id);
     expect(rest3?.meta.result_count).toBe(0);
   });
 
@@ -76,7 +93,7 @@ describe("twitter_api", () => {
   });
 
   test("searchConversation", async () => {
-    const resp = await searchConversation("1569983551055220736");
+    const resp = await tApi.searchConversation("1569983551055220736");
     expect(resp.meta.result_count).toBe(4);
   });
 });
