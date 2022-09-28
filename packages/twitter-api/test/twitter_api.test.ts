@@ -38,7 +38,7 @@ describe("twitter_api", () => {
   test("replay tweet", async () => {
     const resp = await tApi.replyTweet(
       "1569986020397182976",
-      "test 12345123111123124"
+      "test 123451231111231241"
     );
     console.log(await resp.text());
   });

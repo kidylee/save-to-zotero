@@ -1,7 +1,4 @@
-import {
-  ConversationDistributionTask,
-  TwitterResponse,
-} from "@save-to-zotero/twitter-api";
+import { ConversationDistributionTask, TwitterResponse } from "../src/index";
 import { enc, HmacSHA1 } from "crypto-js";
 import OAuth from "oauth-1.0a";
 

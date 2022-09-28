@@ -3,6 +3,12 @@
   "compilerOptions": {
     "declaration": true,
   },
+  "types": [
+    "@cloudflare/workers-types",
+    "@types/jest",
+    "jest",
+    "node"
+  ],
   "include": [
     "./src",
     "globals.d.ts",
