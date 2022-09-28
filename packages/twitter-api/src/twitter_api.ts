@@ -19,13 +19,17 @@ interface TwitterApiInit {
 
 export class TwitterApi {
   parameters: TwitterApiInit;
+  oauth: OAuth;
+  token: OAuth.Token;
 
   constructor(init: TwitterApiInit) {
     this.parameters = init;
-  }
 
-  replayTweet = async (tweetId: string, tweetContent: string): Promise<any> => {
-    const oauth = new OAuth({
+    function hashSha1(baseString: any, key: any) {
+      return HmacSHA1(baseString, key).toString(enc.Base64);
+    }
+
+    this.oauth = new OAuth({
       consumer: {
         key: this.parameters.consumerKey,
         secret: this.parameters.consumerSecret,
@@ -34,18 +38,16 @@ export class TwitterApi {
       hash_function: hashSha1,
     });
 
-    function hashSha1(baseString: any, key: any) {
-      return HmacSHA1(baseString, key).toString(enc.Base64);
-    }
+    this.token = {
+      key: this.parameters.accessToken,
+      secret: this.parameters.accessTokenSecret,
+    };
+  }
 
+  replyTweet = async (tweetId: string, tweetContent: string): Promise<any> => {
     const reqAuth = {
       url: "https://api.twitter.com/2/tweets",
       method: "POST",
-    };
-
-    const token = {
-      key: this.parameters.accessToken,
-      secret: this.parameters.accessTokenSecret,
     };
 
     const reqBody = JSON.stringify({
@@ -56,7 +58,7 @@ export class TwitterApi {
     return await fetch(reqAuth.url, {
       method: reqAuth.method,
       headers: {
-        ...oauth.toHeader(oauth.authorize(reqAuth, token)),
+        ...this.oauth.toHeader(this.oauth.authorize(reqAuth, this.token)),
         "Content-Type": "application/json",
       },
       body: reqBody,
@@ -87,7 +89,7 @@ export class TwitterApi {
   getLastPageOfMentionedTweets = async (
     sinceId?: string | null,
     response?: TwitterResponse
-  ): Promise<TwitterResponse | undefined> => {
+  ): Promise<TwitterResponse> => {
     if (!response) {
       const page = await this.getMentioned();
       return await this.getLastPageOfMentionedTweets(sinceId, page);
@@ -117,6 +119,61 @@ export class TwitterApi {
       "referenced_tweets.id,in_reply_to_user_id"
     );
     return await this.api<TwitterResponse>(url.toString());
+  };
+
+  listDirectMessages = async (): Promise<any> => {
+    const reqAuth = {
+      url: "https://api.twitter.com/1.1/direct_messages/events/list.json",
+      method: "GET",
+    };
+    return await fetch(reqAuth.url, {
+      method: reqAuth.method,
+      headers: {
+        ...this.oauth.toHeader(this.oauth.authorize(reqAuth, this.token)),
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  createWelcomeMessage = async (): Promise<any> => {
+    const reqAuth = {
+      url: "https://api.twitter.com/1.1/direct_messages/welcome_messages/new.json",
+      method: "POST",
+    };
+    return await fetch(reqAuth.url, {
+      method: reqAuth.method,
+      headers: {
+        ...this.oauth.toHeader(this.oauth.authorize(reqAuth, this.token)),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        welcome_message: {
+          name: "Welcome Message",
+          message_data: {
+            text: "Welcome to the Save to Zotero bot! Send me a tweet with a link to a webpage and I'll save it to Zotero for you.",
+          },
+        },
+      }),
+    });
+  };
+
+  newWelcomeMessageRule = async (messageId: string): Promise<any> => {
+    const reqAuth = {
+      url: "https://api.twitter.com/1.1/direct_messages/welcome_messages/rules/new.json",
+      method: "POST",
+    };
+    return await fetch(reqAuth.url, {
+      method: reqAuth.method,
+      headers: {
+        ...this.oauth.toHeader(this.oauth.authorize(reqAuth, this.token)),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        welcome_message_rule: {
+          welcome_message_id: messageId,
+        },
+      }),
+    });
   };
 }
 

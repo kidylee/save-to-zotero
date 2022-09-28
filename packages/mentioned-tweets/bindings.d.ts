@@ -1,7 +1,13 @@
 interface Bindings {
-  TWITTER_BEARER: string;
-  TWITTER_KV: KVNamespace;
-  ZOTERO_API_KV: KVNamespace;
-  TWITTER_ACCOUNT: string;
+  TWITTER_PROCESS_KV: KVNamespace;
+  TWITTER_ZOTERO_API_KV: KVNamespace;
+  MENTIONED_ID_CONVERSATION_ID_KV: KVNamespace;
   GEN_CONTENT: Fetcher;
+
+  TWITTER_BEARER: string;
+  TWITTER_ACCOUNT: string;
+  TWITTER_CONSUMER_KEY: string;
+  TWITTER_CONSUMER_SECRET: string;
+  TWITTER_ACCESS_TOKEN_KEY: string;
+  TWITTER_ACCESS_TOKEN_SECRET: string;
 }

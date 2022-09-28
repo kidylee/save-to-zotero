@@ -2,17 +2,29 @@ name = "mentioned-tweets"
 workers_dev = true
 compatibility_date = "2022-05-03"
 
+[vars]
+TWITTER_BEARER=""
+TWITTER_ACCOUNT=""
+TWITTER_CONSUMER_KEY=""
+TWITTER_CONSUMER_SECRET=""
+TWITTER_ACCESS_TOKEN_KEY=""
+TWITTER_ACCESS_TOKEN_SECRET=""
 
 [[kv_namespaces]]
-binding = "TWITTER_KV"
+binding = "TWITTER_PROCESS_KV"
 id = "9754c1be9a124caa8cff75426111c471"
 preview_id = "2c9be7447201431aa777161e3bd004cf"
 
 
 [[kv_namespaces]]
-binding = "ZOTERO_API_KV"
+binding = "TWITTER_ZOTERO_API_KV"
 id = "8cbdcd27ad274c14a83aef666e7e57a0"
 preview_id = "778f5b33c8ac48fe8a5f5f2e4eb78e63"
+
+[[kv_namespaces]]
+binding = "MENTIONED_ID_CONVERSATION_ID_KV"
+id = "e48c0af4f5ac402baf2769fa86ffa72a"
+preview_id = "4c60cba97d384bcf84ea3e8a5f0e5434"
 
 [[services]]
 binding = "GEN_CONTENT"

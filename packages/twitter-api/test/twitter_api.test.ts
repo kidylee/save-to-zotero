@@ -22,12 +22,25 @@ describe("twitter_api", () => {
   beforeAll(() => {
     globalThis.bindings = getMiniflareBindings();
   });
+
+  test("Set welcome message rule", async () => {
+    const resp = await tApi.newWelcomeMessageRule("1575022823210250244");
+    console.log(await resp.text());
+  });
+  test("Set welcome message", async () => {
+    const resp = await tApi.createWelcomeMessage();
+    console.log(await resp.text());
+  });
+  test("list direct Messages", async () => {
+    const resp = await tApi.listDirectMessages();
+    console.log(await resp.text());
+  });
   test("replay tweet", async () => {
-    const resp = await tApi.replayTweet(
+    const resp = await tApi.replyTweet(
       "1569986020397182976",
-      "test 123451231"
+      "test 12345123111123124"
     );
-    console.log(await resp.json());
+    console.log(await resp.text());
   });
 
   test("API", async () => {
@@ -42,6 +55,7 @@ describe("twitter_api", () => {
     globalThis.bindings = getMiniflareBindings();
     const rest = await tApi.getMentioned();
     expect(rest).toBeDefined();
+    console.log(await rest);
   });
 
   test("getMentioned since id", async () => {
