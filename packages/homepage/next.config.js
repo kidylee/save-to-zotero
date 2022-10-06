@@ -1,7 +1,11 @@
+const withOptimizedImages = require("next-optimized-images");
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withOptimizedImages({
+  handleImages: ["*"],
+
   reactStrictMode: true,
   swcMinify: true,
-}
+});
 
-module.exports = nextConfig
+module.exports = nextConfig;

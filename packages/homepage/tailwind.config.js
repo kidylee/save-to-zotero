@@ -5,10 +5,16 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      spacing: {
+        128: "32rem",
+        136: "38rem",
+      },
+    },
   },
   plugins: [
     // ...
     require("@tailwindcss/forms"),
+    require("daisyui"),
   ],
 };

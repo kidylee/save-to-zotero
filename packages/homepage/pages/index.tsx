@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import { ChevronRightIcon, StarIcon } from "@heroicons/react/20/solid";
 import { SVGProps } from "react";
+import Image from "next/image";
+import demoPic from "../public/demo.png";
 
 const navigation = [
   {
@@ -71,7 +73,7 @@ const Home: NextPage = () => {
     <>
       <div className="bg-white pb-8 sm:pb-12 lg:pb-12">
         <div className="overflow-hidden pt-8 sm:pt-12 lg:relative lg:py-48">
-          <div className="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-24 lg:px-8">
+          <div className="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:h-136 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-24 lg:px-8">
             <div>
               <div>
                 <img
@@ -81,86 +83,22 @@ const Home: NextPage = () => {
                 />
               </div>
               <div className="mt-20">
-                <div>
-                  <a href="#" className="inline-flex space-x-4">
-                    <span className="rounded bg-indigo-50 px-2.5 py-1 text-sm font-semibold text-indigo-600">
-                      What&apos;s new fawefe
-                    </span>
-                    <span className="inline-flex items-center space-x-1 text-sm font-medium text-indigo-600">
-                      <span>Just shipped version 0.1.0</span>
-                      <ChevronRightIcon
-                        className="h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </a>
-                </div>
                 <div className="mt-6 sm:max-w-xl">
                   <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-                    Server management for growing teams
+                    Save tweets to your Zotero
                   </h1>
                   <p className="mt-6 text-xl text-gray-500">
-                    Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure
-                    qui lorem cupidatat commodo.
+                    An opensource Twitter bot abundant your knowledge base.
                   </p>
                 </div>
-                <form
-                  action="#"
-                  className="mt-12 sm:flex sm:w-full sm:max-w-lg"
-                >
-                  <div className="min-w-0 flex-1">
-                    <label htmlFor="hero-email" className="sr-only">
-                      Email address
-                    </label>
-                    <input
-                      id="hero-email"
-                      type="email"
-                      className="block w-full rounded-md border border-gray-300 px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                  <div className="mt-4 sm:mt-0 sm:ml-3">
-                    <button
-                      type="submit"
-                      className="block w-full rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:px-10"
+                <div className="mt-10 sm:flex sm:justify-center lg:justify-start">
+                  <div className="rounded-md shadow">
+                    <a
+                      href="#"
+                      className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 md:py-4 md:px-10 md:text-lg"
                     >
-                      Notify me
-                    </button>
-                  </div>
-                </form>
-                <div className="mt-6">
-                  <div className="inline-flex items-center divide-x divide-gray-300">
-                    <div className="flex flex-shrink-0 pr-5">
-                      <StarIcon
-                        className="h-5 w-5 text-yellow-400"
-                        aria-hidden="true"
-                      />
-                      <StarIcon
-                        className="h-5 w-5 text-yellow-400"
-                        aria-hidden="true"
-                      />
-                      <StarIcon
-                        className="h-5 w-5 text-yellow-400"
-                        aria-hidden="true"
-                      />
-                      <StarIcon
-                        className="h-5 w-5 text-yellow-400"
-                        aria-hidden="true"
-                      />
-                      <StarIcon
-                        className="h-5 w-5 text-yellow-400"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1 py-1 pl-5 text-sm text-gray-500 sm:py-3">
-                      <span className="font-medium text-gray-900">
-                        Rated 5 stars
-                      </span>{" "}
-                      by over{" "}
-                      <span className="font-medium text-indigo-600">
-                        500 beta users
-                      </span>
-                    </div>
+                      Get started
+                    </a>
                   </div>
                 </div>
               </div>
@@ -204,12 +142,21 @@ const Home: NextPage = () => {
                   />
                 </svg>
               </div>
-              <div className="relative -mr-40 pl-4 sm:mx-auto sm:max-w-3xl sm:px-0 lg:h-full lg:max-w-none lg:pl-12">
-                <img
-                  className="w-full rounded-md shadow-xl ring-1 ring-black ring-opacity-5 lg:h-full lg:w-auto lg:max-w-none"
-                  src="https://tailwindui.com/img/component-images/top-nav-with-multi-column-layout-screenshot.jpg"
-                  alt=""
-                />
+              <div className="relative h-full w-96 lg:ml-28 mx-auto">
+                <div className="mockup-phone">
+                  <div className="camera"></div>
+                  <div className="display">
+                    <img
+                      src={demoPic.src}
+                      className="object-contain"
+                      alt="Picture of the author"
+                      // width={500}
+                      // height={500}
+                      // blurDataURL="data:..." automatically provided
+                      // placeholder="blur" // Optional blur-up while loading
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
