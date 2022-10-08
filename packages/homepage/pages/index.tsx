@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { ChevronRightIcon, StarIcon } from "@heroicons/react/20/solid";
 import { SVGProps } from "react";
 import Image from "next/image";
-import demoPic from "../public/demo.png";
+import demoPic from "../public/demo.webp";
 
 const navigation = [
   {
