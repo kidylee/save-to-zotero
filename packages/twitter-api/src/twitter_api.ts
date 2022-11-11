@@ -1,6 +1,7 @@
 import { ConversationDistributionTask, TwitterResponse } from "../src/index";
 import { enc, HmacSHA1 } from "crypto-js";
 import OAuth from "oauth-1.0a";
+import { DMMessageData } from "./type";
 
 export function encodeURIfix(str: string) {
   return encodeURIComponent(str).replace(/!/g, "%21");
@@ -41,6 +42,33 @@ export class TwitterApi {
     };
   }
 
+  sendDM = async (messageData: DMMessageData, recipientId: string) => {
+    const reqAuth = {
+      url: "https://api.twitter.com/1.1/direct_messages/events/new.json",
+      method: "POST",
+    };
+
+    const reqBody = JSON.stringify({
+      event: {
+        type: "message_create",
+        message_create: {
+          target: {
+            recipient_id: recipientId,
+          },
+          message_data: messageData,
+        },
+      },
+    });
+
+    return await fetch(reqAuth.url, {
+      method: reqAuth.method,
+      headers: {
+        ...this.oauth.toHeader(this.oauth.authorize(reqAuth, this.token)),
+        "Content-Type": "application/json",
+      },
+      body: reqBody,
+    });
+  };
   replyTweet = async (tweetId: string, tweetContent: string): Promise<any> => {
     const reqAuth = {
       url: "https://api.twitter.com/2/tweets",

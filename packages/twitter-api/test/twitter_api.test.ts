@@ -23,6 +23,26 @@ describe("twitter_api", () => {
     globalThis.bindings = getMiniflareBindings();
   });
 
+  test("Send DM", async () => {
+    const resp = await tApi.sendDM(
+      {
+        text: "Hello World",
+        quick_reply: {
+          type: "options",
+          options: [
+            {
+              label: "Yes",
+              description: "Yes",
+              metadata: "Yes",
+            },
+          ],
+        },
+      },
+      "296579936"
+    );
+    console.log(await resp.text());
+  });
+
   test("Set welcome message rule", async () => {
     const resp = await tApi.newWelcomeMessageRule("1575022823210250244");
     console.log(await resp.text());

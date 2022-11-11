@@ -1,0 +1,11 @@
+name = "twitter-webhook"
+main = "src/index.ts"
+compatibility_date = "2022-11-05"
+node_compat = true
+[vars]
+TWITTER_BEARER=""
+TWITTER_ACCOUNT=""
+TWITTER_CONSUMER_KEY=""
+TWITTER_CONSUMER_SECRET=""
+TWITTER_ACCESS_TOKEN_KEY=""
+TWITTER_ACCESS_TOKEN_SECRET=""
