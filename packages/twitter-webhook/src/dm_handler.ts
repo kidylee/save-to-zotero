@@ -8,6 +8,9 @@ const handleDM = async (dm: DirectMessageEvent) => {
   if (dm.message_create.quick_reply_response == null) {
     await sendUseQuickReplyDM(dm.message_create.sender_id);
   }
+
+  if (dm.message_create.quick_reply_response?.metadata == "connect") {
+  }
 };
 
 const sendUseQuickReplyDM = async (userId: string) => {

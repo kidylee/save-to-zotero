@@ -2,7 +2,8 @@ import { Router } from "cloudworker-router";
 import { enc, HmacSHA256 } from "crypto-js";
 import { AccountActivityWebhookEvent, Env } from "./types";
 import { TwitterApi } from "@save-to-zotero/twitter-api";
-import { handleDMs } from "./services";
+import { handleDMs } from "./dm_handler";
+import { handleMentionedTweets } from "./mentioned_handler";
 
 const router = new Router<Bindings>();
 
@@ -32,12 +33,13 @@ router.post("/webhook/twitter", async (ctx) => {
   if (event.direct_message_events) {
     await handleDMs(event.direct_message_events);
   } else if (event.tweet_create_events) {
-    console.log(JSON.stringify(event.tweet_create_events));
+    if ("user_has_blocked" in event && event.user_has_blocked == false) {
+      await handleMentionedTweets(event.tweet_create_events);
+    }
   } else {
-    console.log(JSON.stringify(event), "doesn't support");
   }
 
-  console.log(event);
+  console.log(JSON.stringify(event, null, 2));
   return new Response(null, { status: 200 });
 });
 
@@ -47,19 +49,19 @@ export default {
     env: Bindings,
     ctx: ExecutionContext
   ): Promise<Response> {
-    globalEnv = env;
+    bindings = env;
     twitterApi = new TwitterApi({
-      consumerKey: globalEnv.TWITTER_CONSUMER_KEY,
-      consumerSecret: globalEnv.TWITTER_CONSUMER_SECRET,
-      accessToken: globalEnv.TWITTER_ACCESS_TOKEN_KEY,
-      accessTokenSecret: globalEnv.TWITTER_ACCESS_TOKEN_SECRET,
-      botId: globalEnv.TWITTER_ACCOUNT,
+      consumerKey: bindings.TWITTER_CONSUMER_KEY,
+      consumerSecret: bindings.TWITTER_CONSUMER_SECRET,
+      accessToken: bindings.TWITTER_ACCESS_TOKEN_KEY,
+      accessTokenSecret: bindings.TWITTER_ACCESS_TOKEN_SECRET,
+      botId: bindings.TWITTER_ACCOUNT,
     });
     return router.handle(request, env, ctx);
   },
 };
 
-export var globalEnv: Bindings | null = null;
+export var bindings: Bindings | null = null;
 export var twitterApi: TwitterApi | null = null;
 
 interface Bindings {
@@ -69,4 +71,5 @@ interface Bindings {
   TWITTER_CONSUMER_SECRET: string;
   TWITTER_ACCESS_TOKEN_KEY: string;
   TWITTER_ACCESS_TOKEN_SECRET: string;
+  TWITTER_ZOTERO_API_KV: KVNamespace;
 }

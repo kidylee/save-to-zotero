@@ -43,7 +43,7 @@ export interface DirectMessageEvent {
 
 export interface AccountActivityWebhookEvent {
   for_user_id: string;
-  is_blocked_by?: boolean;
+  user_has_blocked?: boolean;
   tweet_create_events?: TweetCreateEvent[];
   direct_message_events?: DirectMessageEvent[];
 }
