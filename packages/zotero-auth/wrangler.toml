@@ -1,0 +1,26 @@
+name = "zotero-auth"
+main = "src/index.ts"
+compatibility_date = "2022-11-17"
+node_compat = true
+[vars]
+# - ZOTERO_APP_CLIENT_KEY
+# - ZOTERO_APP_CLIENT_SECRET
+
+[[kv_namespaces]]
+binding = "ZOTERO_AUTH_KV"
+id = "6fbee94378a84348ab22edf749e76011"
+preview_id = "f1ced049042742df90c057e4bcde4356"
+
+[[kv_namespaces]]
+binding = "TWITTER_ZOTERO_CONNECTING_KV"
+id = "42f5ddd59641474ba92dd71b45d9fe26"
+preview_id = "68758db2a0b5437e8885f2c0f28e402c"
+
+
+[[kv_namespaces]]
+binding = "TWITTER_ZOTERO_API_KV"
+id = "044fb59e8d374c2799dce2a0ffa0effe"
+preview_id = "08c2596474dc4c86a3b45aa39811960b"
+
+
+
