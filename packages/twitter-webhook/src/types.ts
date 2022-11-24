@@ -33,10 +33,10 @@ export interface DirectMessageEvent {
         user_mentions: string[];
         urls: string[];
       };
-    };
-    quick_reply_response?: {
-      type: string;
-      metadata: string;
+      quick_reply_response?: {
+        type: string;
+        metadata: string;
+      };
     };
   };
 }

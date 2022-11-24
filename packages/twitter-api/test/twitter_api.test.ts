@@ -57,8 +57,8 @@ describe("twitter_api", () => {
   });
   test("replay tweet", async () => {
     const resp = await tApi.replyTweet(
-      "1569986020397182976",
-      "test 123451231111231241"
+      "1591086088692846596",
+      "test\n https://twitter.com/messages/compose?recipient_id=1568787574734606337"
     );
     console.log(await resp.text());
   });

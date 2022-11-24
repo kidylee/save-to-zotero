@@ -14,6 +14,8 @@ router.get("/", async (ctx) => {
 router.get("/webhook/twitter", async (ctx) => {
   const { searchParams } = new URL(ctx.request.url);
   const base = searchParams.get("crc_token")!;
+  console.log("base", base);
+  console.log("secret", ctx.env.TWITTER_CONSUMER_SECRET);
 
   const result = HmacSHA256(base, ctx.env.TWITTER_CONSUMER_SECRET).toString(
     enc.Base64
@@ -72,4 +74,5 @@ interface Bindings {
   TWITTER_ACCESS_TOKEN_KEY: string;
   TWITTER_ACCESS_TOKEN_SECRET: string;
   TWITTER_ZOTERO_API_KV: KVNamespace;
+  TWITTER_ZOTERO_CONNECTING_KV: KVNamespace;
 }
