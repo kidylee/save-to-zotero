@@ -1,7 +1,5 @@
-import {
-  getZoteroAccessToken,
-  getZoteroTemporaryCode,
-} from "../src/zotero_api";
+import { getZoteroAccessToken } from "../src/getZoteroAccessToken";
+import { getZoteroTemporaryCode } from "../src/getZoteroTemporaryCode";
 
 describe("scheduled", () => {
   it("should run", async () => {

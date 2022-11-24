@@ -1,13 +1,8 @@
 import { Router } from "cloudworker-router";
-import { getZoteroAccessToken, getZoteroTemporaryCode } from "./zotero_api";
-
-export interface Env {
-  TWITTER_ZOTERO_CONNECTING_KV: KVNamespace;
-  ZOTERO_AUTH_KV: KVNamespace;
-  TWITTER_ZOTERO_API_KV: KVNamespace;
-  ZOTERO_APP_CLIENT_KEY: string;
-  ZOTERO_APP_CLIENT_SECRET: string;
-}
+import OAuth from "oauth-1.0a";
+import { enc, HmacSHA1 } from "crypto-js";
+import { getZoteroAccessToken } from "./getZoteroAccessToken";
+import { getZoteroTemporaryCode } from "./getZoteroTemporaryCode";
 
 const router = new Router<Env>();
 
@@ -69,7 +64,6 @@ router.get("/callback", async (ctx) => {
   return new Response("Hello world!");
 });
 
-export let globalEnv: Env;
 export default {
   async fetch(
     request: Request,
@@ -77,6 +71,27 @@ export default {
     ctx: ExecutionContext
   ): Promise<Response> {
     globalEnv = env;
+    oauth = new OAuth({
+      consumer: {
+        key: globalEnv.ZOTERO_APP_CLIENT_KEY,
+        secret: globalEnv.ZOTERO_APP_CLIENT_SECRET,
+      },
+      signature_method: "HMAC-SHA1",
+      hash_function(base_string, key) {
+        return HmacSHA1(base_string, key).toString(enc.Base64);
+      },
+    });
     return router.handle(request, env, ctx);
   },
 };
+
+export var globalEnv: Env | null = null;
+export var oauth: OAuth | null = null;
+
+export interface Env {
+  TWITTER_ZOTERO_CONNECTING_KV: KVNamespace;
+  ZOTERO_AUTH_KV: KVNamespace;
+  TWITTER_ZOTERO_API_KV: KVNamespace;
+  ZOTERO_APP_CLIENT_KEY: string;
+  ZOTERO_APP_CLIENT_SECRET: string;
+}
