@@ -61,7 +61,7 @@ router.get("/callback", async (ctx) => {
     value.senderId,
     JSON.stringify(result)
   );
-  return new Response("Hello world!");
+  return Response.redirect("https://save-to-zotero.kidylee.com/success");
 });
 
 export default {
