@@ -58,15 +58,15 @@ export default {
       accessToken: bindings.TWITTER_ACCESS_TOKEN_KEY,
       accessTokenSecret: bindings.TWITTER_ACCESS_TOKEN_SECRET,
       botId: bindings.TWITTER_ACCOUNT,
+      bearerToken: bindings.TWITTER_BEARER,
     });
     return router.handle(request, env, ctx);
   },
 };
 
-export var bindings: Bindings | null = null;
 export var twitterApi: TwitterApi | null = null;
-
-interface Bindings {
+export var bindings: Bindings | null = null;
+export interface Bindings {
   TWITTER_BEARER: string;
   TWITTER_ACCOUNT: string;
   TWITTER_CONSUMER_KEY: string;

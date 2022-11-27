@@ -94,4 +94,5 @@ export interface Env {
   TWITTER_ZOTERO_API_KV: KVNamespace;
   ZOTERO_APP_CLIENT_KEY: string;
   ZOTERO_APP_CLIENT_SECRET: string;
+  STRIPE_HEADER_PROXY: string;
 }

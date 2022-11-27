@@ -51,3 +51,59 @@ export interface AccountActivityWebhookEvent {
 export interface Env {
   TWITTER_CONSUMER_SECRET: string;
 }
+
+export interface ZoteroCollection {
+  key: string;
+  version: number;
+  library: {
+    type: string;
+    id: number;
+    name: string;
+    links: {
+      alternate: {
+        href: string;
+        type: string;
+      };
+    };
+  };
+  links: {
+    self: {
+      href: string;
+      type: string;
+    };
+    alternate: {
+      href: string;
+      type: string;
+    };
+  };
+  meta: {
+    numCollections: number;
+    numItems: number;
+  };
+  data: {
+    key: string;
+    version: number;
+    name: string;
+    parentCollection: boolean;
+    relations: any;
+  };
+}
+
+export interface TwitterZoteroAPIValue {
+  oauth_token: string;
+  oauth_token_secret: string;
+  userID: string;
+  username: string;
+  defaultCollectionKey?: string;
+}
+
+export interface CreateZoteroItem {
+  date: string;
+  itemType: string;
+  postType: string;
+  collections: string[];
+  creators: { creatorType: string; name: string }[];
+  forumTitle: string;
+  title: string;
+  url: string;
+}

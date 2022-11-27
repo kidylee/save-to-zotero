@@ -13,6 +13,7 @@ export interface TwitterResponse {
   includes?: Expansions;
 }
 interface Expansions {
+  users?: User[];
   tweets: Tweet[];
 }
 interface ResponseMeta {
@@ -20,4 +21,10 @@ interface ResponseMeta {
   result_count: number;
   newest_id: string;
   oldest_id: string;
+}
+
+interface User {
+  id: string;
+  name: string;
+  username: string;
 }

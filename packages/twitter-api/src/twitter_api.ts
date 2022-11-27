@@ -13,6 +13,7 @@ interface TwitterApiInit {
   accessToken: string;
   accessTokenSecret: string;
   botId: string;
+  bearerToken: string;
 }
 
 export class TwitterApi {
@@ -93,7 +94,7 @@ export class TwitterApi {
   api = async <T>(url: string): Promise<T> => {
     const response = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${process.env.TWITTER_BEARER}`,
+        Authorization: `Bearer ${this.parameters.bearerToken}`,
       },
     });
     if (!response.ok) {
@@ -132,18 +133,31 @@ export class TwitterApi {
     return response;
   };
 
-  searchConversation = async (
+  getThread = async (
+    senderId: string,
     conversationId: string
   ): Promise<TwitterResponse> => {
-    const url = new URL(
-      `https://api.twitter.com/2/tweets/search/recent?query=conversation_id:${conversationId}`
-    );
-    url.searchParams.append("tweet.fields", "in_reply_to_user_id");
+    const url = new URL(`https://api.twitter.com/2/tweets/search/recent`);
+    url.searchParams.append("tweet.fields", "in_reply_to_user_id,created_at");
     url.searchParams.append(
       "expansions",
       "referenced_tweets.id,in_reply_to_user_id"
     );
-    return await this.api<TwitterResponse>(url.toString());
+    url.searchParams.append("max_results", "100");
+    url.searchParams.append(
+      "query",
+      `from:${senderId} to:${senderId} conversation_id:${conversationId}`
+    );
+    url.searchParams.append("place.fields", "full_name,name");
+    const resp = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${this.parameters.bearerToken}`,
+      },
+    });
+    if (resp.status !== 200) {
+      console.error("Error fetching thread", await resp.text());
+    }
+    return await resp.json();
   };
 
   listDirectMessages = async (): Promise<any> => {
@@ -180,6 +194,21 @@ export class TwitterApi {
         },
       }),
     });
+  };
+  queryConversationId = async (tweetId: string): Promise<string> => {
+    const resp = await fetch(
+      `https://api.twitter.com/2/tweets/${tweetId}?tweet.fields=conversation_id`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.parameters.bearerToken}`,
+        },
+      }
+    );
+    if (!resp.ok) {
+      console.error("Error query conversationId", await resp.text());
+    }
+    const json: SingleTweet = await resp.json();
+    return json.data.conversation_id;
   };
 
   newWelcomeMessageRule = async (messageId: string): Promise<any> => {
@@ -244,3 +273,11 @@ export const getConversationTasks = (
   });
   return Array.from(map.values());
 };
+
+export interface SingleTweet {
+  data: {
+    id: string;
+    text: string;
+    conversation_id: string;
+  };
+}

@@ -5,6 +5,7 @@ node_compat = true
 [vars]
 # - ZOTERO_APP_CLIENT_KEY
 # - ZOTERO_APP_CLIENT_SECRET
+# - STRIPE_HEADER_PROXY
 
 [[kv_namespaces]]
 binding = "ZOTERO_AUTH_KV"

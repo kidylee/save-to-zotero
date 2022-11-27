@@ -22,15 +22,12 @@ export async function getZoteroTemporaryCode(): Promise<TempCodeResponse> {
       oauth_callback: "https://zotero-auth.savetozotero.workers.dev/callback",
     },
   };
-  const tokenRequestResponse = await fetch(
-    "https://stripheader-yelksq4xea-uw.a.run.app/oauth/request",
-    {
-      headers: {
-        ...oauth.toHeader(oauth.authorize(tokenRequestConfig)),
-      },
-      method: "post",
-    }
-  );
+  const tokenRequestResponse = await fetch(globalEnv!.STRIPE_HEADER_PROXY, {
+    headers: {
+      ...oauth.toHeader(oauth.authorize(tokenRequestConfig)),
+    },
+    method: "post",
+  });
   const tokenRequestData = await tokenRequestResponse.text();
   const searchParams = new URLSearchParams(tokenRequestData);
   const obj: Record<string, string> = {};

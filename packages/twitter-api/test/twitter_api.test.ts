@@ -16,6 +16,7 @@ const tApi = new TwitterApi({
   accessToken: process.env.ACCESS_TOKEN_KEY!,
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
   botId: process.env.TWITTER_ACCOUNT!,
+  bearerToken: process.env.BEARER_TOKEN!,
 });
 
 describe("twitter_api", () => {
@@ -115,7 +116,10 @@ describe("twitter_api", () => {
       "https://api.twitter.com/2/users/296579936/mentions?max_results=100&tweet.fields=conversation_id%2Ccreated_at%2Cauthor_id%2Cin_reply_to_user_id"
     );
   });
-
+  test("single tweet query", async () => {
+    const rest = await tApi.queryConversationId("1596445830159876096");
+    expect(rest).toBe("1596495244350087171");
+  });
   test("conversation Tasks", async () => {
     globalThis.bindings = getMiniflareBindings();
 
@@ -127,8 +131,9 @@ describe("twitter_api", () => {
   });
 
   test("searchConversation", async () => {
-    const resp = await tApi.searchConversation("1569983551055220736");
-    expect(resp.meta.result_count).toBe(4);
+    const resp = await tApi.getThread("2735936853", "1596495244350087171");
+    console.log(resp);
+    expect(resp.meta.result_count).toBe(5);
   });
 });
 
