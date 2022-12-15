@@ -40,7 +40,7 @@ const handleTweet = async (tweet: TweetCreateEvent) => {
     // single tweet
     const zoteroItem: CreateZoteroItem = {
       itemType: "forumPost",
-      title: tweet.text,
+      title: enrichedTweet.data.text,
       creators: [
         {
           creatorType: "author",
