@@ -31,13 +31,41 @@ const handleTweet = async (tweet: TweetCreateEvent) => {
       JSON.stringify(zoteroAPIValue)
     );
   }
-  const conversationId = await twitterApi!.queryConversationId(
+  const enrichedTweet = await twitterApi!.enrichTweet(
     tweet.in_reply_to_status_id_str!
   );
-  console.log("Conversation id:", conversationId);
+  console.log("Conversation id:", enrichedTweet.data.conversation_id);
+
+  if (enrichedTweet.data.conversation_id === tweet.in_reply_to_status_id_str) {
+    // single tweet
+    const zoteroItem: CreateZoteroItem = {
+      itemType: "forumPost",
+      title: tweet.text,
+      creators: [
+        {
+          creatorType: "author",
+          name: `${enrichedTweet.includes!.users![0].name}[@${
+            enrichedTweet.includes!.users![0].username
+          }]`,
+        },
+      ],
+      forumTitle: "Twitter",
+      postType: "Tweet",
+      url: `https://twitter.com/${
+        enrichedTweet.includes!.users![0].username
+      }/status/${enrichedTweet.data.id}`,
+      date: enrichedTweet.data.created_at,
+      collections: [zoteroAPIValue.defaultCollectionKey],
+    };
+    await createItem(zoteroItem, zoteroAPIValue);
+    await replySuccess(tweet.id_str);
+    return;
+  }
+
+  //thread
   const thread = await twitterApi!.getThread(
     tweet.in_reply_to_user_id_str!,
-    conversationId
+    enrichedTweet.data.conversation_id
   );
   console.log("Thread:", thread);
   const mainItem = thread.includes?.tweets.at(-1)!;
@@ -77,6 +105,7 @@ const handleTweet = async (tweet: TweetCreateEvent) => {
       zoteroAPIValue
     );
   }
+  await replySuccess(tweet.id_str);
 };
 
 const replyConnectTweet = async (tweetId: string) => {
@@ -84,4 +113,8 @@ const replyConnectTweet = async (tweetId: string) => {
     tweetId,
     "Sorry, I'm not able to find your Zotero information, please DM me or use below button to set it up.\n https://twitter.com/messages/compose?recipient_id=1568787574734606337"
   );
+};
+
+const replySuccess = async (tweetId: string) => {
+  await twitterApi!.replyTweet(tweetId, "Saved!");
 };

@@ -195,9 +195,9 @@ export class TwitterApi {
       }),
     });
   };
-  queryConversationId = async (tweetId: string): Promise<string> => {
+  enrichTweet = async (tweetId: string): Promise<SingleTweet> => {
     const resp = await fetch(
-      `https://api.twitter.com/2/tweets/${tweetId}?tweet.fields=conversation_id`,
+      `https://api.twitter.com/2/tweets/${tweetId}?tweet.fields=conversation_id,created_at&expansions=author_id&user.fields=name,username`,
       {
         headers: {
           Authorization: `Bearer ${this.parameters.bearerToken}`,
@@ -207,8 +207,7 @@ export class TwitterApi {
     if (!resp.ok) {
       console.error("Error query conversationId", await resp.text());
     }
-    const json: SingleTweet = await resp.json();
-    return json.data.conversation_id;
+    return await resp.json();
   };
 
   newWelcomeMessageRule = async (messageId: string): Promise<any> => {
@@ -279,5 +278,15 @@ export interface SingleTweet {
     id: string;
     text: string;
     conversation_id: string;
+    created_at: string;
+  };
+  includes: {
+    users: [
+      {
+        id: string;
+        name: string;
+        username: string;
+      }
+    ];
   };
 }

@@ -117,7 +117,7 @@ describe("twitter_api", () => {
     );
   });
   test("single tweet query", async () => {
-    const rest = await tApi.queryConversationId("1596445830159876096");
+    const rest = await tApi.enrichTweet("1596445830159876096");
     expect(rest).toBe("1596495244350087171");
   });
   test("conversation Tasks", async () => {
