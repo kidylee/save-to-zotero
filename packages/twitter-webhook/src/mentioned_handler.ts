@@ -36,31 +36,26 @@ const handleTweet = async (tweet: TweetCreateEvent) => {
   );
   console.log("Conversation id:", enrichedTweet.data.conversation_id);
 
-  if (enrichedTweet.data.conversation_id === tweet.in_reply_to_status_id_str) {
-    // single tweet
-    const zoteroItem: CreateZoteroItem = {
-      itemType: "forumPost",
-      title: enrichedTweet.data.text,
-      creators: [
-        {
-          creatorType: "author",
-          name: `${enrichedTweet.includes!.users![0].name}[@${
-            enrichedTweet.includes!.users![0].username
-          }]`,
-        },
-      ],
-      forumTitle: "Twitter",
-      postType: "Tweet",
-      url: `https://twitter.com/${
-        enrichedTweet.includes!.users![0].username
-      }/status/${enrichedTweet.data.id}`,
-      date: enrichedTweet.data.created_at,
-      collections: [zoteroAPIValue.defaultCollectionKey],
-    };
-    await createItem(zoteroItem, zoteroAPIValue);
-    await replySuccess(tweet.id_str);
-    return;
-  }
+  const zoteroItem: CreateZoteroItem = {
+    itemType: "forumPost",
+    title: enrichedTweet.data.text,
+    creators: [
+      {
+        creatorType: "author",
+        name: `${enrichedTweet.includes!.users![0].name}[@${
+          enrichedTweet.includes!.users![0].username
+        }]`,
+      },
+    ],
+    forumTitle: "Twitter",
+    postType: "Tweet",
+    url: `https://twitter.com/${
+      enrichedTweet.includes!.users![0].username
+    }/status/${enrichedTweet.data.id}`,
+    date: enrichedTweet.data.created_at,
+    collections: [zoteroAPIValue.defaultCollectionKey],
+  };
+  const itemId = await createItem(zoteroItem, zoteroAPIValue);
 
   //thread
   const thread = await twitterApi!.getThread(
@@ -68,27 +63,7 @@ const handleTweet = async (tweet: TweetCreateEvent) => {
     enrichedTweet.data.conversation_id
   );
   console.log("Thread:", thread);
-  const mainItem = thread.includes?.tweets.at(-1)!;
-  const zoteroItem: CreateZoteroItem = {
-    itemType: "forumPost",
-    title: mainItem.text,
-    creators: [
-      {
-        creatorType: "author",
-        name: `${thread.includes!.users![0].name}[@${
-          thread.includes!.users![0].username
-        }]`,
-      },
-    ],
-    forumTitle: "Twitter",
-    postType: "Tweet",
-    url: `https://twitter.com/${thread.includes!.users![0].username}/status/${
-      mainItem.id
-    }`,
-    date: mainItem.created_at,
-    collections: [zoteroAPIValue.defaultCollectionKey],
-  };
-  const itemId = await createItem(zoteroItem, zoteroAPIValue);
+
   if (thread.data.length > 1) {
     const replies = thread.data.slice(0, thread.data.length - 1);
     const text: string = replies
